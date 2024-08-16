@@ -1,0 +1,30 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #282c34;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    text-align: center;
+}
+
+.text {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.letter {
+    color: gray;
+}
+
+.correct {
+    color: white;
+}
+
+.incorrect {
+    color: red;
+}
