@@ -8,6 +8,20 @@ body {
     font-family: Arial, sans-serif;
 }
 
+.letter.cursor {
+    border-left: 1px solid #fff; /* Черный вертикальный курсор */
+    animation: blink 0.7s infinite step-end; /* Эффект мигания */
+}
+
+@keyframes blink {
+    from, to {
+        border-color: transparent;
+    }
+    50% {
+        border-color: #fff;
+    }
+}
+
 .container {
     text-align: center;
 }

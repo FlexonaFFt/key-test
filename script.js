@@ -52,11 +52,31 @@ function displayText() {
         span.className = 'letter';
         textContainer.appendChild(span);
     }
+    updateCursor(); // Устанавливаем курсор в начале текста
+}
+
+// Функция для обновления курсора
+function updateCursor() {
+    const letters = document.querySelectorAll('.letter');
+    letters.forEach(letter => letter.classList.remove('cursor')); // Убираем курсор со всех символов
+    if (currentIndex < textToType.length) {
+        letters[currentIndex].classList.add('cursor'); // Добавляем курсор на текущий символ
+    }
 }
 
 // Функция для обработки нажатий клавиш
 function handleKeyPress(event) {
     const letters = document.querySelectorAll('.letter');
+
+    // Если нажата клавиша Backspace
+    if (event.key === "Backspace") {
+        if (currentIndex > 0) {
+            currentIndex--;
+            letters[currentIndex].className = 'letter';  // Устанавливаем класс на 'letter', что сбрасывает стили
+        }
+        updateCursor();
+        return;
+    }
 
     // Проверяем, что текущий индекс меньше длины текста
     if (currentIndex < textToType.length) {
@@ -71,12 +91,15 @@ function handleKeyPress(event) {
                 letters[currentIndex].classList.add('incorrect');
                 errorCount++;  // Увеличиваем счетчик ошибок
             }
+            currentIndex++;  // Перемещаемся к следующему символу
         }
     }
 
+    updateCursor(); // Обновляем позицию курсора
+
     // Проверяем, завершен ли ввод
     if (currentIndex === textToType.length) {
-        result.textContent = `Поздравляем! Вы ввели текст правильно. Количество ошибок: ${errorCount}`;
+        result.textContent = `Поздравляем! Вы ввели текст. Количество ошибок: ${errorCount}`;
         document.removeEventListener('keydown', handleKeyPress); // Удаляем обработчик
     }
 }
