@@ -43,6 +43,8 @@ const result = document.getElementById("result");
 
 let currentIndex = 0;
 let errorCount = 0;  // Переменная для подсчета ошибок
+let startTime = null;  // Время начала ввода
+let endTime = null;  // Время окончания ввода
 
 function displayText() {
     textContainer.innerHTML = '';
@@ -66,6 +68,11 @@ function updateCursor() {
 
 // Функция для обработки нажатий клавиш
 function handleKeyPress(event) {
+    // Запуск таймера при первом нажатии
+    if (startTime === null) {
+        startTime = new Date();
+    }
+
     const letters = document.querySelectorAll('.letter');
 
     // Если нажата клавиша Backspace
@@ -99,7 +106,17 @@ function handleKeyPress(event) {
 
     // Проверяем, завершен ли ввод
     if (currentIndex === textToType.length) {
-        result.textContent = `Поздравляем! Вы ввели текст. Количество ошибок: ${errorCount}`;
+        endTime = new Date();  // Фиксируем время окончания
+        const timeTaken = (endTime - startTime) / 1000;  // Время в секундах
+        const minutesTaken = timeTaken / 60;  // Время в минутах
+        const cpm = Math.round(textToType.length / minutesTaken);  // Символов в минуту (CPM)
+        const wpm = Math.round(textToType.split(' ').length / minutesTaken);  // Слов в минуту (WPM)
+
+        result.innerHTML = `Поздравляем! Вы ввели текст.<br> 
+        Количество ошибок: ${errorCount}.<br> 
+        Затраченное время: ${timeTaken.toFixed(2)} секунд.<br> 
+        Скорость печати: ${cpm} CPM (${wpm} WPM).`;
+
         document.removeEventListener('keydown', handleKeyPress); // Удаляем обработчик
     }
 }
