@@ -42,6 +42,7 @@ const textContainer = document.getElementById("text-to-type");
 const result = document.getElementById("result");
 
 let currentIndex = 0;
+let errorCount = 0;  // Переменная для подсчета ошибок
 
 function displayText() {
     textContainer.innerHTML = '';
@@ -59,21 +60,24 @@ function handleKeyPress(event) {
 
     // Проверяем, что текущий индекс меньше длины текста
     if (currentIndex < textToType.length) {
-        // Проверяем, соответствует ли нажатая клавиша ожидаемому символу
+        // Если нажатая клавиша соответствует ожидаемому символу
         if (event.key === textToType[currentIndex]) {
-            letters[currentIndex].classList.remove('letter');
-            letters[currentIndex].classList.add('correct');
+            letters[currentIndex].classList.remove('incorrect'); // Убираем класс 'incorrect', если он был
+            letters[currentIndex].classList.add('correct'); // Добавляем класс 'correct'
             currentIndex++;
         } else {
             // Если символ неправильный, добавляем класс 'incorrect'
-            letters[currentIndex].classList.add('incorrect');
+            if (!letters[currentIndex].classList.contains('incorrect')) {
+                letters[currentIndex].classList.add('incorrect');
+                errorCount++;  // Увеличиваем счетчик ошибок
+            }
         }
+    }
 
-        // Проверяем, завершен ли ввод
-        if (currentIndex === textToType.length) {
-            result.textContent = "Поздравляем! Вы ввели текст правильно.";
-            document.removeEventListener('keydown', handleKeyPress); // Удаляем обработчик
-        }
+    // Проверяем, завершен ли ввод
+    if (currentIndex === textToType.length) {
+        result.textContent = `Поздравляем! Вы ввели текст правильно. Количество ошибок: ${errorCount}`;
+        document.removeEventListener('keydown', handleKeyPress); // Удаляем обработчик
     }
 }
 
